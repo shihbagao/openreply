@@ -25,10 +25,16 @@ export async function POST(request: NextRequest) {
   const instagramAccountId =
     typeof body.instagramAccountId === "string" ? body.instagramAccountId : null;
 
-  await prisma.instagramAccount.deleteMany({
+  await prisma.instagramAccount.updateMany({
     where: {
       workspaceId: context.workspaceId,
       ...(instagramAccountId ? { id: instagramAccountId } : {}),
+    },
+    data: {
+      accessToken: "",
+      webhookSubscribed: false,
+      // 如果 Schema 允許將 tokenExpiresAt 設為 null，可加此行：
+      // tokenExpiresAt: null,
     },
   });
 
