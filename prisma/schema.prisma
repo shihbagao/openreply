@@ -210,7 +210,7 @@ model Automation {
   updatedAt DateTime @updatedAt
 
   workspace        Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  instagramAccount InstagramAccount @relation(fields: [instagramAccountId], references: [id], onDelete: SetNull)
+  instagramAccount InstagramAccount? @relation(fields: [instagramAccountId], references: [id], onDelete: SetNull)
   dmLogs           DmLog[]
   trackedLinks     TrackedLink[]
   linkClicks       LinkClick[]
