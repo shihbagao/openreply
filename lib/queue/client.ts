@@ -106,7 +106,7 @@ export function getDMQueue(): Queue<DmQueueJob> {
         // them lets a later sweep re-enqueue and try again once a transient
         // failure (e.g. an Instagram rate-limit window) has passed. Failure
         // detail is still preserved in DmLog.
-        removeOnFail: { age: 300, count: 2000 },
+        //removeOnFail: { age: 300, count: 2000 },
         attempts: 3,
         backoff: {
           type: "exponential",            // 👈 關鍵修復：將 custom 改為 exponential (指數退避)，避免 5 秒死重試
