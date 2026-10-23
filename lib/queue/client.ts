@@ -14,7 +14,7 @@ export function getRedisConnection(): Redis {
     connection = new Redis(process.env.REDIS_URL!, {
       maxRetriesPerRequest: null, // BullMQ 必要設定
       enableReadyCheck: false,    // 關閉每次連線時額外的 Ping 檢查，節省 Command
-      keepAlive: 50000,           // 保持 TCP 心跳，防止 Upstash 連線被切斷
+      keepAlive: 30000,           // 保持 TCP 心跳，防止 Upstash 連線被切斷
     });
   }
   return connection;
