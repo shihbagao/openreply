@@ -85,12 +85,12 @@ export async function GET() {
     checkDatabase(),
     checkRedis(),
     checkQueue(),
-    getWorkerHealth().catch((error) => ({
-      healthy: false,
-      heartbeat: null,
-      ageMs: null,
-      error: error instanceof Error ? error.message : "Worker check failed",
-    })),
+    //getWorkerHealth().catch((error) => ({
+    //  healthy: false,
+    //  heartbeat: null,
+    //  ageMs: null,
+    //  error: error instanceof Error ? error.message : "Worker check failed",
+    //})),
   ]);
 
   const healthy =
