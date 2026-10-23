@@ -16,7 +16,11 @@ export function getRedisConnection(): Redis {
       enableReadyCheck: false,    // 👈 1. 關閉定時 Ready Check/PING 探針
       keepAlive: 30000,           // 👈 2. 將 TCP 心跳拉長為 30 秒才發送一次
       enableOfflineQueue: false,  // 👈 3. 避免斷線時在背景離線積壓請求每 5 秒狂刷
-
+      // 👈 加入這段：如果 Redis 斷線，第一次等待 10 秒，之後最多 30 秒才試圖重連一次
+      retryStrategy(times) {
+        const delay = Math.min(times * 10000, 30000);
+        return delay;
+      },
     });
   }
   return connection;
