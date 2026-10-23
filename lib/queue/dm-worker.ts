@@ -1609,8 +1609,8 @@ export function createDMWorker(): Worker<DmQueueJob> {
     connection: getRedisConnection(),
     concurrency: 5,
     // 💡 調整 BullMQ 的輪詢與心跳設定，防止 Upstash Command 被暴洗
-    drainDelay: 30, // 沒任務時，等待 30 秒才再次檢查 Redis（預設是 5 秒）
-    stalledInterval: 60000, // 檢查卡住任務的頻率改為 60 秒（預設是 30 秒）
+    drainDelay: 60, // 沒任務時，等待 30 秒才再次檢查 Redis（預設是 5 秒）
+    stalledInterval: 120000, // 檢查卡住任務的頻率改為 60 秒（預設是 30 秒）
     settings: {
       backoffStrategy: (attemptsMade: number) =>
         BACKOFF_DELAYS[Math.min(attemptsMade - 1, BACKOFF_DELAYS.length - 1)],
