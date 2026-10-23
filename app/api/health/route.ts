@@ -71,7 +71,7 @@ async function checkQueue(): Promise<HealthCheck & { counts?: unknown }> {
 
 // 記憶體快取：避免外部 Uptime 監控或 Health Check 每幾秒就暴刷 Redis / DB
 let cachedHealthResponse: { data: any; timestamp: number } | null = null;
-const HEALTH_CACHE_TTL_MS = 15_000; // 15 秒內重複呼叫直接傳回快取結果
+const HEALTH_CACHE_TTL_MS = 60_000; // 15 秒內重複呼叫直接傳回快取結果
 
 export async function GET() {
   const now = Date.now();
