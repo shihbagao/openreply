@@ -1,0 +1,10 @@
+{
+  "phases": {
+    "build": {
+      "cmds": ["npm run db:generate"]
+    }
+  },
+  "start": {
+    "cmd": "npm run worker"
+  }
+}
