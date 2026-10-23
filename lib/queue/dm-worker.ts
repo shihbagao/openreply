@@ -1609,6 +1609,7 @@ export function createDMWorker(): Worker<DmQueueJob> {
     connection: getRedisConnection(),
     concurrency: 1, // 👈 1. 將併發數從 5 改為 1 (減少併發請求)
     drainDelay: 20, // 👈 佇列沒任務時，等待 20 秒才再次詢問 Upstash
+    stalledInterval: 0,      // 👈 關鍵！設為 0 徹底停用每 5 秒的背景巡邏探針
     removeOnComplete: { count: 100 },
     removeOnFail: { count: 100 },
     settings: {
