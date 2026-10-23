@@ -13,6 +13,10 @@ export function getRedisConnection(): Redis {
   if (!connection) {
     connection = new Redis(process.env.REDIS_URL!, {
       maxRetriesPerRequest: null, // Required by BullMQ
+      enableReadyCheck: false,    // 👈 1. 關閉定時 Ready Check/PING 探針
+      keepAlive: 30000,           // 👈 2. 將 TCP 心跳拉長為 30 秒才發送一次
+      enableOfflineQueue: false,  // 👈 3. 避免斷線時在背景離線積壓請求每 5 秒狂刷
+
     });
   }
   return connection;
@@ -94,7 +98,8 @@ export function getDMQueue(): Queue<DmQueueJob> {
     dmQueue = new Queue<DmQueueJob>("dm-processing", {
       connection: getRedisConnection(),
       defaultJobOptions: {
-        removeOnComplete: { count: 1000 }, // Keep last 1000 completed jobs
+        removeOnComplete: { count: 100 }, // 只保留最近 100 筆成功紀錄
+        removeOnFail: { count: 100 },     // 只保留最近 100 筆失敗紀錄，避免堆積
         // Clear failed jobs shortly after they exhaust retries. Job ids are
         // deterministic (comment_<acct>_<id>), so a retained failed job would
         // block the polling reconciler from ever retrying that comment. Clearing
@@ -104,7 +109,8 @@ export function getDMQueue(): Queue<DmQueueJob> {
         removeOnFail: { age: 300, count: 2000 },
         attempts: 3,
         backoff: {
-          type: "custom",
+          type: "exponential",            // 👈 關鍵修復：將 custom 改為 exponential (指數退避)，避免 5 秒死重試
+          delay: 10000,                   // 第一次重試等 10 秒，之後呈倍數拉長
         },
       },
     });
