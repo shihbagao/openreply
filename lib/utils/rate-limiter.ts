@@ -15,6 +15,7 @@
  */
 
 import Redis from "ioredis";
+import { getRedisConnection } from "@/lib/queue/client"; // 💡 新增這行：引用共用的 Redis 連線
 
 const RATE_LIMIT_MAX = 750; // private replies per hour, per Meta's documented cap
 const RATE_LIMIT_WINDOW = 3600; // 1 hour in seconds
