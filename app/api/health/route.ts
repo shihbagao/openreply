@@ -81,7 +81,7 @@ async function checkQueue(): Promise<HealthCheck & { counts?: unknown }> {
 }
 
 export async function GET() {
-  const [database, redis, queue, worker] = await Promise.all([
+  const [database, redis, queue] = await Promise.all([
     checkDatabase(),
     checkRedis(),
     checkQueue(),
@@ -96,8 +96,7 @@ export async function GET() {
   const healthy =
     database.status === "ok" &&
     redis.status === "ok" &&
-    queue.status === "ok" &&
-    worker.healthy;
+    queue.status === "ok";
 
   return NextResponse.json(
     {
@@ -106,7 +105,6 @@ export async function GET() {
         database,
         redis,
         queue,
-        worker,
       },
     },
     { status: healthy ? 200 : 503 }
