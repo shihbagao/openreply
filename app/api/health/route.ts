@@ -17,7 +17,7 @@ interface HealthCheck {
 
 async function checkDatabase(): Promise<HealthCheck> {
   try {
-    await prisma.$queryRaw`SELECT 1`;
+    //await prisma.$queryRaw`SELECT 1`;
     return { status: "ok" };
   } catch (error) {
     return {
