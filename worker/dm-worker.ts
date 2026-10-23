@@ -45,7 +45,7 @@ async function poll() {
 }
 
 // Kick off one sweep shortly after boot, then on a fixed interval.
-setTimeout(() => void poll(), 10_000);
+setTimeout(() => void poll(), 300_000);
 const pollTimer = setInterval(() => void poll(), POLL_INTERVAL_MS);
 
 async function shutdown(signal: string) {
