@@ -21,7 +21,7 @@ const RATE_LIMIT_MAX = 750; // private replies per hour, per Meta's documented c
 const RATE_LIMIT_WINDOW = 3600; // 1 hour in seconds
 const REQUEUE_DELAY_MS = 30 * 60 * 1000; // 30 minutes
 const MAX_REQUEUE_ATTEMPTS = 3;
-
+/*
 let redis: Redis | null = null;
 
 function getRedis(): Redis {
@@ -31,6 +31,11 @@ function getRedis(): Redis {
     });
   }
   return redis;
+}
+*/
+// 🟩 將第 25-34 行替換為以下幾行即可：
+function getRedis(): Redis {
+  return getRedisConnection();
 }
 
 export interface RateLimitResult {
