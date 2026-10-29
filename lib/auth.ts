@@ -30,6 +30,20 @@ export const authConfig = {
           from: emailFrom,
         }),
   ],
+  // 🔽 新增 cookies 設定塊 🔽
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === "production"
+        ? "__Secure-authjs.session-token"
+        : "authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
   callbacks: {
     // Runs before the magic link is sent, so a blocked address never receives
     // one, and again when the link is verified.
@@ -56,6 +70,7 @@ export const authConfig = {
   },
   session: {
     strategy: "database",
+    maxAge: 12 * 60 * 60, // 設定 Session 最多保留 12 hr，避免過期太久殘留無效 Token
   },
   trustHost: true,
   secret: process.env.NEXTAUTH_SECRET,
