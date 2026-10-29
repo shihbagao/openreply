@@ -2,13 +2,15 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const PROTECTED_PREFIXES = ["/dashboard", "/automations", "/logs", "/settings"];
 
+const COOKIE_NAMES = [
+  "authjs.session-token",
+  "__Secure-authjs.session-token",
+  "next-auth.session-token",
+  "__Secure-next-auth.session-token",
+];
+
 function hasSessionCookie(request: NextRequest): boolean {
-  return (
-    request.cookies.has("authjs.session-token") ||
-    request.cookies.has("__Secure-authjs.session-token") ||
-    request.cookies.has("next-auth.session-token") ||
-    request.cookies.has("__Secure-next-auth.session-token")
-  );
+  return COOKIE_NAMES.some((name) => request.cookies.has(name));
 }
 
 export function proxy(request: NextRequest) {
@@ -22,7 +24,13 @@ export function proxy(request: NextRequest) {
   if (isProtected && !isAuthenticated) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
+    
+    // 💡 關鍵修改點：建立轉向回應的同時，強制清除瀏覽器裡殘留的所有舊 Session Cookie
+    const response = NextResponse.redirect(loginUrl);
+    for (const name of COOKIE_NAMES) {
+      response.cookies.set(name, "", { maxAge: 0, path: "/" });
+    }
+    return response;
   }
 
   if (isLogin && isAuthenticated) {
